@@ -9,13 +9,15 @@ fn main() {
     let ecouteur = TcpListener::bind("127.0.0.1:7878").unwrap();
     let groupe = GroupeTaches::new(4);
 
-    for flux in ecouteur.incoming() {
+    for flux in ecouteur.incoming().take(2) {
         let flux = flux.unwrap();
 
         groupe.executer(|| {
             gestion_connexion(flux);
         });
     }
+
+    println!("Arret complet");
 }
 
 fn gestion_connexion(mut flux: TcpStream) {
